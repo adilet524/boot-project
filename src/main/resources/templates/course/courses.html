@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Courses</title>
+    <style>table,
+    td {
+        border: 1px solid #333;
+        margin-top: 200px;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 25px;
+    }
+
+    thread,
+    tfoot {
+        background-color: #333;
+        color: #fff;
+    }
+    </style>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            padding: 3px;
+        }
+    </style>
+</head>
+<body>
+<table class="table table-bordered">
+    <thead class="table-dark">
+    <tr>
+        <th scope="colgroup">Id</th>
+        <th scope="col">Course name</th>
+        <th scope="col">Duration</th>
+        <th scope="col">AssignStu</th>
+        <th scope="col">AssignIns</th>
+        <th scope="col">Lessons</th>
+        <th scope="col">Update</th>
+        <th scope="col">Delete</th>
+    </tr>
+    </thead>
+    <tbody class="table-success">
+    <tr th:each="course: ${courses}">
+        <td th:text="${course.id}"></td>
+        <td th:text="${course.courseName}"></td>
+        <td th:text="${course.durationMonth}"></td>
+
+        <td>
+            <form th:method="POST"
+                  th:action="@{/{companyId}/{courseId}/assignStu(companyId=${companyId}, courseId=${course.getId()})}">
+                <select name="student" class="form-select form-select-sm"  aria-label=".form-select-sm example"
+                        th:object="${inst}"
+                        th:field="*{id}">
+                    <option th:each="student : ${students}"
+                            th:value="${student.id}"
+                            th:text="${student.firstName}">
+                    </option>
+                </select>
+                <input type="submit" value="assign" style="height: 30px;width: 60px; background: azure"/>
+            </form>
+        </td>
+
+        <td>
+            <form th:method="POST"
+                  th:action="@{/{companyId}/{courseId}/assignInsToCourse(companyId=${companyId}, courseId=${course.getId()})}">
+                <select name="instructor" class="form-select form-select-sm"  aria-label=".form-select-sm example"
+                        th:object="${inst}"
+                        th:field="*{id}">
+                    <option th:each="instructor : ${instructors}"
+                            th:value="${instructor.id}"
+                            th:text="${instructor.firstName}">
+                    </option>
+                </select>
+                <input type="submit" value="assign" style="height: 30px;width: 60px; background: azure"/>
+            </form>
+        </td>
+
+        <td><a th:href="@{/lessons/{id}(id=${course.getId()})}">
+            <button>Lessons</button>
+        </a>
+        </td>
+
+        <td><a th:href="@{/update/{id}(id=${course.id})}">
+            <button>Update</button>
+        </a>
+        </td>
+        <td><a  th:method="GET" th:href="@{/{companyId}/{id}/deleteCourse(id=${course.id},companyId=${companyId})}"
+                onclick="return confirm('Are you sure to delete this course?')">
+            <button>Delete</button>
+        </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br><br><br><br>
+<div style="text-align: center">
+    <a th:href="@{/courses/{id}/addCourse(id=${companyId})}">
+        <button style="font-size: 25px;"> Add Course </button>
+    </a>
+</div>
+</body>
+</html>
